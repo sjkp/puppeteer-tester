@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: puppeteer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: puppeteer
+  template:
+    metadata:
+      labels:
+        app: puppeteer
+    spec:
+      containers:
+      - name: puppeteer
+        image: browserless/chrome
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 3000
+        env:
+        - name: TOKEN
+          value: "YOUR-TOKEN"       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: puppeteer
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 3000
+  selector:
+    app: puppeteer
